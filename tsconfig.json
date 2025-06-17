@@ -1,3 +1,21 @@
 {
-  "extends": "./.quasar/tsconfig.json"
+  "extends": "./.quasar/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@apps/*": ["./src/apps/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@css/*": ["./src/css/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@components/*": ["./src/shared/components/*"],
+      "@composables/*": ["./src/shared/composables/*"],
+      "@layouts/*": ["./src/shared/layouts/*"],
+      "@services/*": ["./src/shared/services/*"],
+      "@stores/*": ["./src/shared/stores/*"],
+      "@types/*": ["./src/shared/types/*"],
+      "@utils/*": ["./src/shared/utils/*"]
+    }
+  },
+  "include": ["*.d.ts", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
