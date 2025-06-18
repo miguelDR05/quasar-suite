@@ -1,9 +1,49 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="lHh LpR lFf">
+    <!-- Left Sidebar with App Icons -->
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      :width="48"
+      :breakpoint="0"
+      bordered
+      class="app-sidebar"
+    >
+      <div class="sidebar-content">
+        <!-- App Icons -->
+        <div class="app-icons">
+          <q-btn
+            v-for="app in sidebarApps"
+            :key="app.name"
+            flat
+            square
+            :color="app.active ? 'white' : 'grey-6'"
+            :class="['app-icon-btn', { 'app-icon-btn--active': app.active }]"
+            @click="setActiveApp(app.name)"
+          >
+            <q-icon :name="app.icon" size="20px" />
+            <q-tooltip anchor="center right" self="center left" :offset="[10, 0]" class="bg-grey-9">
+              {{ app.label }}
+            </q-tooltip>
+          </q-btn>
+        </div>
+
+        <!-- Bottom Icons -->
+        <div class="bottom-icons">
+          <q-btn flat square color="grey-6" class="app-icon-btn" @click="toggleAppGrid">
+            <q-icon name="apps" size="16px" />
+            <q-tooltip anchor="center right" self="center left" :offset="[10, 0]" class="bg-grey-9">
+              Todas las aplicaciones
+            </q-tooltip>
+          </q-btn>
+        </div>
+      </div>
+    </q-drawer>
+
     <!-- Header -->
     <q-header elevated class="bg-gradient-header text-white" height-hint="64">
       <q-toolbar class="q-px-md">
-        <!-- App Grid Button -->
+        <!-- App Grid Button (Hidden on desktop, shown on mobile) -->
         <q-btn
           flat
           dense
@@ -12,7 +52,7 @@
           color="white"
           size="md"
           @click="toggleAppGrid"
-          class="q-mr-sm"
+          class="q-mr-sm lt-md"
         >
           <q-tooltip>Aplicaciones de Microsoft 365</q-tooltip>
         </q-btn>
@@ -21,7 +61,7 @@
         <div class="text-h6 text-weight-medium q-mr-lg">Outlook</div>
 
         <!-- Search Bar -->
-        <div class="col-4 q-mx-lg">
+        <div class="col-4 q-mx-lg gt-sm">
           <q-input
             v-model="searchQuery"
             filled
@@ -136,6 +176,14 @@ interface NavigationItem {
   active: boolean;
 }
 
+interface SidebarApp {
+  name: string;
+  label: string;
+  icon: string;
+  active: boolean;
+  color?: string;
+}
+
 interface MicrosoftApp {
   name: string;
   icon: string;
@@ -144,8 +192,21 @@ interface MicrosoftApp {
 }
 
 // Reactive data
+const leftDrawerOpen = ref(true);
 const searchQuery = ref('');
 const showAppGrid = ref(false);
+
+const sidebarApps = reactive<SidebarApp[]>([
+  { name: 'outlook', label: 'Outlook', icon: 'mail', active: true, color: 'blue-6' },
+  { name: 'teams', label: 'Microsoft Teams', icon: 'people', active: false, color: 'purple-6' },
+  { name: 'calendar', label: 'Calendar', icon: 'event', active: false, color: 'blue-7' },
+  { name: 'todo', label: 'To Do', icon: 'check_circle', active: false, color: 'blue-8' },
+  { name: 'onedrive', label: 'OneDrive', icon: 'cloud', active: false, color: 'blue-5' },
+  { name: 'word', label: 'Word', icon: 'description', active: false, color: 'blue-9' },
+  { name: 'excel', label: 'Excel', icon: 'table_chart', active: false, color: 'green-6' },
+  { name: 'powerpoint', label: 'PowerPoint', icon: 'slideshow', active: false, color: 'orange-6' },
+  { name: 'onenote', label: 'OneNote', icon: 'note', active: false, color: 'purple-7' },
+]);
 
 const navigationItems = reactive<NavigationItem[]>([
   { name: 'inicio', label: 'Inicio', active: true },
@@ -154,18 +215,14 @@ const navigationItems = reactive<NavigationItem[]>([
 ]);
 
 const microsoftApps: MicrosoftApp[] = [
-  { name: 'Outlook', icon: 'mail', color: 'blue-6' },
-  { name: 'Teams', icon: 'people', color: 'purple-6' },
-  { name: 'OneDrive', icon: 'cloud', color: 'blue-7' },
-  { name: 'Word', icon: 'description', color: 'blue-8' },
-  { name: 'Excel', icon: 'table_chart', color: 'green-6' },
-  { name: 'PowerPoint', icon: 'slideshow', color: 'orange-6' },
-  { name: 'OneNote', icon: 'note', color: 'purple-7' },
   { name: 'SharePoint', icon: 'share', color: 'teal-6' },
   { name: 'Power BI', icon: 'analytics', color: 'yellow-7' },
   { name: 'Yammer', icon: 'forum', color: 'blue-5' },
   { name: 'Stream', icon: 'play_circle', color: 'red-6' },
   { name: 'Power Apps', icon: 'apps', color: 'purple-8' },
+  { name: 'Planner', icon: 'task', color: 'green-7' },
+  { name: 'Whiteboard', icon: 'draw', color: 'red-7' },
+  { name: 'Forms', icon: 'quiz', color: 'purple-5' },
 ];
 
 // Methods
@@ -179,6 +236,14 @@ const setActiveNavItem = (itemName: string): void => {
   });
 };
 
+const setActiveApp = (appName: string): void => {
+  sidebarApps.forEach((app) => {
+    app.active = app.name === appName;
+  });
+  // Aquí puedes agregar lógica para cambiar la vista/contenido
+  console.log(`Switched to ${appName}`);
+};
+
 const openApp = (app: MicrosoftApp): void => {
   console.log(`Opening ${app.name}`);
   showAppGrid.value = false;
@@ -187,6 +252,64 @@ const openApp = (app: MicrosoftApp): void => {
 </script>
 
 <style lang="scss" scoped>
+// Sidebar styling
+.app-sidebar {
+  background: linear-gradient(180deg, #0078d4, #106ebe);
+  border-right: none !important;
+
+  .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 8px 0;
+  }
+
+  .app-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+    flex: 1;
+  }
+
+  .bottom-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 4px;
+    margin-top: auto;
+  }
+
+  .app-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    &--active {
+      background-color: rgba(255, 255, 255, 0.2);
+      color: white !important;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: -4px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 3px;
+        height: 20px;
+        background-color: white;
+        border-radius: 0 2px 2px 0;
+      }
+    }
+  }
+}
+
 // Header gradient similar to Outlook
 .bg-gradient-header {
   background: linear-gradient(135deg, #0078d4, #106ebe, #005a9e);
@@ -239,7 +362,7 @@ const openApp = (app: MicrosoftApp): void => {
 // App grid dialog styling
 .app-grid-dialog {
   .q-dialog__inner {
-    padding-top: 80px; // Adjust for header height
+    padding-top: 120px; // Adjust for header height
   }
 }
 
@@ -280,8 +403,8 @@ const openApp = (app: MicrosoftApp): void => {
 
 // Responsive adjustments
 @media (max-width: 768px) {
-  .search-input {
-    display: none;
+  .app-sidebar {
+    transform: translateX(-100%);
   }
 
   .navigation-bar {
