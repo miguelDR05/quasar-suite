@@ -106,8 +106,11 @@ export const useCalendarStore = defineStore('calendar', () => {
   };
 
   const getEventsForDateRange = (startDate: Date, endDate: Date): CalendarEvent[] => {
-    const start = startDate.toISOString().split('T')[0];
-    const end = endDate.toISOString().split('T')[0];
+    if (!startDate || !endDate || isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return [];
+    }
+    const start = startDate.toISOString().split('T')[0] ?? '';
+    const end = endDate.toISOString().split('T')[0] ?? '';
 
     return events.value.filter((event) => {
       return event.date >= start && event.date <= end;
@@ -147,12 +150,13 @@ export const useCalendarStore = defineStore('calendar', () => {
   const duplicateEvent = (id: string, newDate: string): string | null => {
     const event = events.value.find((e) => e.id === id);
     if (event) {
-      const duplicated = {
-        ...event,
+      // Excluye 'id' al duplicar el evento
+      const { id: _omit, ...rest } = event;
+      const duplicated: Omit<CalendarEvent, 'id'> = {
+        ...rest,
         date: newDate,
         title: `${event.title} (Copia)`,
       };
-      delete (duplicated as any).id;
       return addEvent(duplicated);
     }
     return null;

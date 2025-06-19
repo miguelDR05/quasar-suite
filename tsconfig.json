@@ -17,5 +17,12 @@
       "@utils/*": ["./src/shared/utils/*"]
     }
   },
-  "include": ["*.d.ts", "src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+  "include": [
+    "*.d.ts",
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "quasar.config.ts"
+  ]
 }

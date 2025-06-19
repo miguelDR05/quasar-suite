@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref, computed, watch } from 'vue';
-import { Dark, colors } from 'quasar';
+import { Dark } from 'quasar';
 
 export interface ThemeColors {
   primary: string;
@@ -101,8 +101,20 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Computadas
   const currentColors = computed(() => {
-    const theme = themes.value[currentTheme.value] ?? '';
-    return isDarkMode.value ? theme.colors.dark : theme.colors.light;
+    const theme = themes.value[currentTheme.value];
+    if (theme && theme.colors) {
+      return isDarkMode.value ? theme.colors.dark : theme.colors.light;
+    }
+    // Devuelve un objeto vacío o un fallback si no existe el tema
+    return {
+      primary: '',
+      secondary: '',
+      accent: '',
+      positive: '',
+      negative: '',
+      info: '',
+      warning: '',
+    } as ThemeColors;
   });
 
   const availableThemes = computed(() =>
@@ -140,8 +152,6 @@ export const useThemeStore = defineStore('theme', () => {
     // Aplicar colores CSS custom properties
     Object.entries(theme).forEach(([key, value]) => {
       document.documentElement.style.setProperty(`--q-${key}`, value);
-      // También establecer en Quasar
-      colors.setBrand(key as keyof ThemeColors, value);
     });
   };
 

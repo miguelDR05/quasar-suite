@@ -128,6 +128,12 @@ import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
 
+interface AppItem {
+  name: string;
+  icon: string;
+  color: string;
+}
+
 // Reactive data
 const leftDrawerOpen = ref(false);
 const searchText = ref('');
@@ -135,7 +141,7 @@ const currentMonth = ref('Junio 2025');
 const statusMessage = ref('Hoy no hay compañeros en la oficina');
 
 // Apps data
-const apps = ref([
+const apps = ref<AppItem[]>([
   { name: 'Bookings', icon: 'event', color: 'bg-blue' },
   { name: 'Grupos', icon: 'group', color: 'bg-light-blue' },
   { name: 'Ir a Excel', icon: 'grid_on', color: 'bg-green' },
@@ -148,9 +154,16 @@ const apps = ref([
 ]);
 
 // Calendar data
-const dayHeaders = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+const dayHeaders: string[] = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-const calendarDays = ref([
+const calendarDays = ref<
+  Array<{
+    number: number;
+    isOtherMonth: boolean;
+    hasEvent: boolean;
+    isToday: boolean;
+  }>
+>([
   // Días del mes anterior
   { number: 26, isOtherMonth: true, hasEvent: false, isToday: false },
   { number: 27, isOtherMonth: true, hasEvent: false, isToday: false },
@@ -213,7 +226,7 @@ const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
-const selectApp = (app: any) => {
+const selectApp = (app: AppItem) => {
   $q.notify({
     message: `Aplicación seleccionada: ${app.name}`,
     type: 'positive',
@@ -237,13 +250,13 @@ const showAll = () => {
   });
 };
 
-const selectDay = (day: any) => {
-  $q.notify({
-    message: `Día seleccionado: ${day.number}`,
-    type: 'info',
-    position: 'top',
-  });
-};
+// const selectDay = (day: any) => {
+//   $q.notify({
+//     message: `Día seleccionado: ${day.number}`,
+//     type: 'info',
+//     position: 'top',
+//   });
+// };
 
 onMounted(() => {
   // Inicialización del componente
