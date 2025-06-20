@@ -90,6 +90,11 @@ export default defineConfig((ctx) => {
               lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue,json}"',
               useFlatConfig: true,
             },
+            overlay: {
+              initialIsOpen: false, // No abrir automáticamente
+              position: 'tl', // Posición (top-left)
+              badgeStyle: 'display: none;', // Ocultar el badge/icono
+            },
           },
           { server: false },
         ],

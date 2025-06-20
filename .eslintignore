@@ -3,6 +3,5 @@
 /src-cordova
 /.quasar
 /node_modules
-.eslintrc.js
 eslint.config.js
 /src-ssr

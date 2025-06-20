@@ -130,7 +130,26 @@ export const useCalendarStore = defineStore('calendar', () => {
   const updateEvent = (id: string, updates: Partial<CalendarEvent>): boolean => {
     const index = events.value.findIndex((event) => event.id === id);
     if (index !== -1) {
-      events.value[index] = { ...events.value[index], ...updates };
+      const original = events.value[index];
+      // Solo actualiza si la propiedad está definida
+      const updated: any = {
+        ...original,
+        ...Object.fromEntries(
+          Object.entries(updates).filter(
+            ([key, value]) =>
+              value !== undefined ||
+              // Permite actualizar a undefined solo si la propiedad es opcional
+              !(
+                key === 'id' ||
+                key === 'title' ||
+                key === 'date' ||
+                key === 'color' ||
+                key === 'type'
+              ),
+          ),
+        ),
+      };
+      events.value[index] = updated;
       saveEventsToStorage();
       return true;
     }
@@ -240,7 +259,17 @@ export const useCalendarStore = defineStore('calendar', () => {
     const saved = localStorage.getItem('calendarEvents');
     if (saved) {
       try {
-        events.value = JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        events.value = Array.isArray(parsed)
+          ? parsed.filter(
+              (e): e is CalendarEvent =>
+                typeof e.id === 'string' &&
+                typeof e.title === 'string' &&
+                typeof e.date === 'string' &&
+                typeof e.color === 'string' &&
+                typeof e.type === 'string',
+            )
+          : [];
       } catch (e) {
         console.warn('Error loading events from storage:', e);
       }

@@ -1,5 +1,6 @@
 <template>
-  <q-layout view="lHh LpR lFf">
+  <!-- hHh lpR fFf -->
+  <q-layout view="hHh LpR lFf">
     <!-- Left Sidebar with App Icons -->
     <q-drawer
       v-model="leftDrawerOpen"
@@ -41,8 +42,8 @@
     </q-drawer>
 
     <!-- Header -->
-    <q-header elevated class="bg-gradient-header text-white" height-hint="64">
-      <q-toolbar class="q-px-md">
+    <q-header elevated class="bg-gradient-header text-white no-padding" height-hint="54">
+      <q-toolbar class="no-padding">
         <!-- App Grid Button (Hidden on desktop, shown on mobile) -->
         <q-btn
           flat
@@ -52,24 +53,24 @@
           color="white"
           size="md"
           @click="toggleAppGrid"
-          class="q-mr-sm lt-md"
+          class="q-mx-sm"
         >
-          <q-tooltip>Aplicaciones de Microsoft 365</q-tooltip>
+          <q-tooltip>Aplicaciones de Warp</q-tooltip>
         </q-btn>
 
         <!-- Outlook Title -->
-        <div class="text-h6 text-weight-medium q-mr-lg">Outlook</div>
+        <div class="text-h6 text-weight-medium q-mx-sm">Warp</div>
 
         <!-- Search Bar -->
-        <div class="col-4 q-mx-lg gt-sm">
+        <div class="col-4 row text-center items-center justify-center">
           <q-input
             v-model="searchQuery"
             filled
             dense
-            placeholder="Explorar contactos, directorio y grupos"
+            placeholder="Buscar"
             bg-color="white"
             color="primary"
-            class="search-input"
+            class="search-input col-8"
           >
             <template v-slot:prepend>
               <q-icon name="search" color="grey-7" />
@@ -80,58 +81,27 @@
         <q-space />
 
         <!-- Header Actions -->
-        <div class="row q-gutter-xs items-center">
-          <q-btn flat dense round icon="feedback" color="white" size="sm">
+        <div class="row q-gutter-x-xs bg-indigo">
+          <q-btn flat icon="feedback" color="white" size="sm">
             <q-tooltip>Comentarios</q-tooltip>
           </q-btn>
 
-          <q-btn flat dense round icon="lightbulb" color="white" size="sm">
+          <q-btn flat icon="lightbulb" color="white" size="sm">
             <q-tooltip>Novedades</q-tooltip>
           </q-btn>
 
-          <q-btn flat dense round icon="notifications" color="white" size="sm">
+          <q-btn flat icon="notifications" color="white" size="sm">
             <q-tooltip>Notificaciones</q-tooltip>
           </q-btn>
 
-          <q-btn flat dense round icon="settings" color="white" size="sm">
+          <q-btn flat icon="settings" color="white" size="sm">
             <q-tooltip>Configuración</q-tooltip>
           </q-btn>
 
-          <q-btn flat dense round color="white" size="sm" class="q-ml-sm">
+          <q-btn flat color="white" size="sm">
             <q-avatar size="32px" color="primary" text-color="white"> A </q-avatar>
             <q-tooltip>Cuenta</q-tooltip>
           </q-btn>
-        </div>
-      </q-toolbar>
-    </q-header>
-
-    <!-- Navigation Bar -->
-    <q-header elevated class="bg-white text-dark navigation-bar" height-hint="48">
-      <q-toolbar class="q-px-md" style="height: 48px; min-height: 48px">
-        <div class="row items-center full-width">
-          <!-- Navigation Items -->
-          <div class="row items-center q-gutter-lg">
-            <q-btn
-              v-for="item in navigationItems"
-              :key="item.name"
-              flat
-              no-caps
-              :color="item.active ? 'primary' : 'grey-8'"
-              :class="['nav-item', { 'nav-item--active': item.active }]"
-              @click="setActiveNavItem(item.name)"
-            >
-              {{ item.label }}
-            </q-btn>
-          </div>
-
-          <q-space />
-
-          <!-- Right side actions -->
-          <div class="row items-center q-gutter-sm">
-            <q-btn flat dense icon="help" color="grey-7" size="sm">
-              <q-tooltip>Ayuda</q-tooltip>
-            </q-btn>
-          </div>
         </div>
       </q-toolbar>
     </q-header>
@@ -145,7 +115,7 @@
     <q-dialog v-model="showAppGrid" position="top" class="app-grid-dialog">
       <q-card class="app-grid-card">
         <q-card-section class="q-pa-lg">
-          <div class="text-h6 q-mb-md text-center">Aplicaciones de Microsoft 365</div>
+          <div class="text-h6 q-mb-md text-center">Aplicaciones de Warp</div>
 
           <div class="app-grid">
             <div
@@ -293,7 +263,7 @@ const openApp = (app: MicrosoftApp): void => {
 
     &--active {
       background-color: rgba(255, 255, 255, 0.2);
-      color: white !important;
+      color: $primary !important;
 
       &::before {
         content: '';
@@ -317,11 +287,12 @@ const openApp = (app: MicrosoftApp): void => {
 
 // Search input styling
 .search-input {
-  .q-field__control {
+  :deep(.q-field__control) {
+    background-color: white;
     border-radius: 4px;
-    height: 32px;
+    height: 35px;
+    box-shadow: none;
   }
-
   .q-field__native {
     padding-top: 0;
     padding-bottom: 0;
