@@ -57,3 +57,24 @@
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
+
+// inputs
+.input-dense {
+  :deep(.q-field__control) {
+    padding: 0 8px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    height: 35px;
+  }
+
+  :deep(.q-field__native) {
+    padding-left: 10px;
+    line-height: normal;
+  }
+
+  ::v-deep(.q-field__marginal) {
+    height: 35px;
+    line-height: normal;
+  }
+}
