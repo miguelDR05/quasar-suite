@@ -4,7 +4,17 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     component: () => import('@shared/layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('@apps/IndexPage.vue') }],
+    children: [
+      { path: '', component: () => import('@apps/IndexPage.vue') },
+      {
+        path: '/excel-sync/upload',
+        component: () => import('@apps/excel-sync/excel-upload/views/UploadPage.vue'),
+      },
+    ],
+  },
+  {
+    path: '/excel-sync/upload',
+    component: () => import('@apps/excel-sync/excel-upload/views/UploadPage.vue'),
   },
 
   // Always leave this as last one,
